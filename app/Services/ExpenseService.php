@@ -46,6 +46,13 @@ class ExpenseService implements ExpenseServiceInterface
             ->get();
     }
     
+    public function filterByYear($year)
+    {
+        return Expense::whereYear('date', $year)
+            ->orderBy('date', 'desc')
+            ->get();
+    }
+    
     public function delete($id)
     {
         $expense = Expense::findOrFail($id);

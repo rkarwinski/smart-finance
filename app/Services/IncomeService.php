@@ -46,6 +46,13 @@ class IncomeService implements IncomeServiceInterface
             ->get();
     }
     
+    public function filterByYear($year)
+    {
+        return Income::whereYear('date', $year)
+            ->orderBy('date', 'desc')
+            ->get();
+    }
+    
     public function delete($id)
     {
         $income = Income::findOrFail($id);

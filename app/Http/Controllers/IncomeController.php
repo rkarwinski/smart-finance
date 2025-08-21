@@ -53,6 +53,11 @@ class IncomeController extends Controller
         return response()->json($this->service->filterByMonth($month, $year));
     }
     
+    public function filterByYear($year)
+    {
+        return response()->json($this->service->filterByYear($year));
+    }
+    
     public function destroy($id)
     {
         $this->service->delete($id);
