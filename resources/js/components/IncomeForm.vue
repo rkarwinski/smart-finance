@@ -11,7 +11,18 @@
       </div>
       <div class="col-6">
         <label for="category">Category</label>
-        <Dropdown id="category" v-model="form.category" :options="categories" optionLabel="label" optionValue="value" required class="w-full" />
+        <Dropdown 
+          id="category" 
+          v-model="form.category" 
+          :options="categories" 
+          optionLabel="label" 
+          optionValue="value" 
+          placeholder="Select a category"
+          :filter="true"
+          filterPlaceholder="Search categories"
+          required 
+          class="w-full" 
+        />
       </div>
       <div class="col-6">
         <label for="date">Date</label>

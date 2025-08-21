@@ -11,7 +11,18 @@
       </div>
       <div class="col-6">
         <label for="category">Category</label>
-        <Dropdown id="category" v-model="form.category" :options="categories" optionLabel="label" optionValue="value" required class="w-full" />
+        <Dropdown 
+          id="category" 
+          v-model="form.category" 
+          :options="categories" 
+          optionLabel="label" 
+          optionValue="value" 
+          placeholder="Select a category"
+          :filter="true"
+          filterPlaceholder="Search categories"
+          required 
+          class="w-full" 
+        />
       </div>
       <div class="col-6">
         <label for="amount">Amount</label>
@@ -77,8 +88,18 @@ const categories = [
   { label: 'Shoes', value: 'shoes' },
   { label: 'Entertainment', value: 'entertainment' },
   { label: 'Transport', value: 'transport' },
-  { label: 'Courses/Education', value: 'courses/education' }
+  { label: 'Courses/Education', value: 'courses/education' },
+  { label: 'Health', value: 'health' },
+  { label: 'Utilities', value: 'utilities' },
+  { label: 'Other', value: 'other' },
+  { label: 'Bills', value: 'bills' },
+  { label: 'Cards', value: 'cards' },
+  { label: 'Lunch', value: 'lunch' },
+  { label: 'Gifts', value: 'gifts' }
 ];
+
+// Debug para verificar se as categorias estão sendo carregadas
+console.log('Categories loaded:', categories);
 
 const fetchExpense = async () => {
   if (props.editingId) {

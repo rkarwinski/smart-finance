@@ -44,7 +44,14 @@ const categoryColors = {
   'shoes': '#96ceb4',
   'entertainment': '#ffeaa7',
   'transport': '#dda0dd',
-  'courses/education': '#98d8c8'
+  'courses/education': '#98d8c8',
+  'health': '#ff7675',
+  'utilities': '#a29bfe',
+  'other': '#fd79a8',
+  'bills': '#e17055',
+  'cards': '#81ecec',
+  'lunch': '#00b894',
+  'gifts': '#fdcb6e'
 };
 
 const chartOptions = {
@@ -71,7 +78,9 @@ const chartData = computed(() => {
     if (!categoryTotals[expense.category]) {
       categoryTotals[expense.category] = 0;
     }
-    categoryTotals[expense.category] += parseFloat(expense.amount);
+    // Usar amount_eur se a moeda for BRL, senão usar amount
+    const amount = expense.currency === 'BRL' ? parseFloat(expense.amount_eur || 0) : parseFloat(expense.amount);
+    categoryTotals[expense.category] += amount;
   });
 
   const labels = Object.keys(categoryTotals);
@@ -105,8 +114,7 @@ const fetchData = async () => {
     if (props.period === 'month') {
       url = `/api/expenses/filter/${props.currentMonth}/${props.currentYear}`;
     } else if (props.period === 'year') {
-      // Implementar busca por ano
-      url = `/api/expenses`; // Por enquanto, buscar todos
+      url = `/api/expenses/filter-year/${props.currentYear}`;
     }
 
     const { data } = await axios.get(url);

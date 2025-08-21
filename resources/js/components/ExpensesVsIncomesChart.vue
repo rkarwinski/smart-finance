@@ -53,11 +53,19 @@ const chartOptions = {
 };
 
 const totalExpenses = computed(() => {
-  return expensesData.value.reduce((total, expense) => total + parseFloat(expense.amount), 0);
+  return expensesData.value.reduce((total, expense) => {
+    // Usar amount_eur se a moeda for BRL, senão usar amount
+    const amount = expense.currency === 'BRL' ? parseFloat(expense.amount_eur || 0) : parseFloat(expense.amount);
+    return total + amount;
+  }, 0);
 });
 
 const totalIncomes = computed(() => {
-  return incomesData.value.reduce((total, income) => total + parseFloat(income.amount), 0);
+  return incomesData.value.reduce((total, income) => {
+    // Usar amount_eur se a moeda for BRL, senão usar amount
+    const amount = income.currency === 'BRL' ? parseFloat(income.amount_eur || 0) : parseFloat(income.amount);
+    return total + amount;
+  }, 0);
 });
 
 const balance = computed(() => {
