@@ -1,8 +1,14 @@
 <template>
-  <ExpenseList ref="list" @add="showModal = true" @edit="handleEdit" @delete="handleDelete" />
+  <ExpenseList ref="list" @add="showModal = true" @edit="handleEdit" @delete="handleDelete" @copy-recurring="showRecurringModal = true" />
   <ModalFormWrapper v-model="showModal" :header="editingId ? 'Edit Expense' : 'Add Expense'">
     <ExpenseForm :editingId="editingId" @saved="onSaved" />
   </ModalFormWrapper>
+  
+  <RecurringExpensesModal 
+    v-model:visible="showRecurringModal" 
+    @expenses-copied="onExpensesCopied" 
+  />
+  
   <Dialog v-model:visible="showDeleteConfirm" modal header="Confirm Delete" :style="{width: '450px'}">
     <div class="flex align-items-center justify-content-center">
       <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
@@ -21,10 +27,12 @@ import axios from 'axios';
 import ExpenseList from '../components/ExpenseList.vue';
 import ExpenseForm from '../components/ExpenseForm.vue';
 import ModalFormWrapper from '../components/ModalFormWrapper.vue';
+import RecurringExpensesModal from '../components/RecurringExpensesModal.vue';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 
 const showModal = ref(false);
+const showRecurringModal = ref(false);
 const showDeleteConfirm = ref(false);
 const editingId = ref(null);
 const deletingId = ref(null);
@@ -34,6 +42,12 @@ function onSaved() {
   showModal.value = false;
   editingId.value = null;
   list.value.fetchExpenses();
+}
+
+function onExpensesCopied(result) {
+  console.log(`${result.count} expenses copied to ${result.month}/${result.year}`);
+  list.value.fetchExpenses();
+  // Opcional: mostrar toast de sucesso
 }
 
 function handleEdit(expense) {

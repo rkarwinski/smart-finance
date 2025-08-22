@@ -32,6 +32,11 @@
 import { ref, onMounted, computed } from 'vue';
 import Chart from 'primevue/chart';
 import axios from 'axios';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+// Registrar os componentes do Chart.js incluindo o plugin de datalabels
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 const props = defineProps({
   period: String,
@@ -48,6 +53,30 @@ const chartOptions = {
   plugins: {
     legend: {
       position: 'bottom'
+    },
+    tooltip: {
+      callbacks: {
+        label: function(context) {
+          const label = context.label || '';
+          const value = context.parsed || 0;
+          const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
+          const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+          return `${label}: €${value.toFixed(2)} (${percentage}%)`;
+        }
+      }
+    },
+    datalabels: {
+      display: true,
+      color: 'white',
+      font: {
+        weight: 'bold',
+        size: 14
+      },
+      formatter: (value, context) => {
+        const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
+        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+        return `${percentage}%`;
+      }
     }
   }
 };
@@ -110,6 +139,10 @@ const fetchData = async () => {
     } else if (props.period === 'year') {
       expensesUrl = `/api/expenses/filter-year/${props.currentYear}`;
       incomesUrl = `/api/incomes/filter-year/${props.currentYear}`;
+    } else if (props.period === 'forecast') {
+      // Para forecast, buscar dados do próximo mês
+      expensesUrl = `/api/expenses/filter/${props.currentMonth}/${props.currentYear}`;
+      incomesUrl = `/api/incomes/filter/${props.currentMonth}/${props.currentYear}`;
     }
 
     const [expensesResponse, incomesResponse] = await Promise.all([

@@ -3,6 +3,12 @@
     <template #title>
       Expenses
       <Button icon="pi pi-plus" class="ml-2 p-button-sm" @click="$emit('add')" />
+      <Button 
+        icon="pi pi-copy" 
+        label="Copy Recurring" 
+        class="ml-2 p-button-sm p-button-outlined" 
+        @click="$emit('copy-recurring')" 
+      />
     </template>
     <template #content>
       <MonthFilter :month="month" :year="year" @filter="onFilter" />
@@ -60,6 +66,6 @@ function onFilter(m, y) {
 
 onMounted(fetchExpenses);
 
-defineEmits(['add', 'edit', 'delete']);
+defineEmits(['add', 'edit', 'delete', 'copy-recurring']);
 defineExpose({ fetchExpenses });
 </script>
